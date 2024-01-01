@@ -5,7 +5,7 @@ Install Node.js and npm: Ensure Node.js and npm are installed. You can download 
 
 Initialize your project: If you haven't already, create a new directory for your project and run npm init in the terminal. This will create a package.json file.
 
-Install Web3: In your project directory, run npm install web3. This will install the Web3.js library, which is essential for interacting with the Ethereum blockchain.
+Install Web3: In your project directory, run npm install web3. This will install the Web3.js library, which is essential for interacting with blockchain.
 
 Install File System (fs): The fs module is a core Node module and doesn't require separate installation. It's available by default.
 
