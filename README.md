@@ -1,7 +1,7 @@
 # wash-trading-detection
 A prototype web3js script for automated detection of erc721 wash trading detection
 
-Install Node.js and npm: Ensure Node.js and npm are installed. You can download them from [Node.js website](https://nodejs.org/).
+Install Node.js and npm: You can download them from [Node.js website](https://nodejs.org/).
 
 Initialize your project: If you haven't already, create a new directory for your project and run npm init in the terminal. This will create a package.json file.
 
