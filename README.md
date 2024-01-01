@@ -30,4 +30,7 @@ Not every detected event will be a wash trade, the script detects high frequency
 
 The output.txt will be located in the same file location as the wash.js script, outptut will contain address pairs, number of suspected wash trades and the transaction number for suspected trades, manually inspect transactions and compare timeframes of suspected wash trades, repeated trades between a limited set of wallet addresses within a short period of time highly indicate patterns of wash trading.
 
-to narrow down suspected wash trading pairs exclude any address pairs that contain contract addresses, wash trading will generally occur between a limited set of user addresses.
+to narrow down suspected wash trading pairs exclude any address pairs that contain contract addresses, wash trading will 
+generally occur between a limited set of user addresses.
+
+**If the output contains a large number of transactions the terminal may appear to hang for several minutes while the transactions are being processed.
