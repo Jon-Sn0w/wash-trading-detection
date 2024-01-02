@@ -29,45 +29,41 @@ async function fetchTransactions(walletAddress, fromBlock, toBlock) {
 
 // Function to fetch transactions of a wallet address
 function analyzeForWashTrading(transactions) {
-	let transferPairs = new Map(); // To store transaction pairs
-	let suspectedWashTrades = [];
-	
-	transactions.forEach(tx => {
-		let from = tx.from;
-		let to = tx.to;
-		let assetId = tx.assetId;
-		
-		// Create a unique key for each asset and the involved addresses
-		let key = `${assetId}-${[from, to].sort().join('-')}`;
-		
-		if (!transferPairs.has(key)) {
-			transferPairs.set(key, []);
-		}
-		
-		transferPairs.get(key).push(tx);
-		
-		// Analyze the pattern for each asset and pair of addresses
-		let transfers = transferPairs.get(key);
-		if (transfers.length > 1) {
-			// Check for back and forth transfers which might indicate wash trading
-			let recentTransfer = transfers[transfers.length - 1];
-			let previousTransfer = transfers[transfers.length - 2];
-			
-			if (recentTransfer.from === previousTransfer.to && recentTransfer.to === previousTransfer.from) {
-				// If the asset is being transferred back and forth between the same addresses
-				suspectedWashTrades.push({
-					assetId: assetId,
-					from: from,
-					to: to,
-					transfers: transfers.map(t => t.transactionHash) // Collecting transaction hashes for evidence
-				});
-			}
-		}
-	});
-	
-	return suspectedWashTrades;
-}
+    let transferPairs = new Map();
+    let suspectedWashTrades = [];
 
+    transactions.forEach(tx => {
+        let from = tx.from;
+        let to = tx.to;
+        let assetId = tx.assetId;  // Make sure this is correctly set for ERC-721 tokens
+        
+        let pairKey = `${assetId}-${[from, to].sort().join('-')}`;
+
+        if (!transferPairs.has(pairKey)) {
+            transferPairs.set(pairKey, []);
+        }
+
+        transferPairs.get(pairKey).push(tx);
+
+        let transfers = transferPairs.get(pairKey);
+        if (transfers.length > 1) {
+            let recentTransfer = transfers[transfers.length - 1];
+            let previousTransfer = transfers[transfers.length - 2];
+
+            if (recentTransfer.from === previousTransfer.to && recentTransfer.to === previousTransfer.from) {
+                // Add only the new suspected wash trade instead of all accumulated ones
+                suspectedWashTrades.push({
+                    assetId: assetId,
+                    from: from,
+                    to: to,
+                    transfers: [recentTransfer.transactionHash, previousTransfer.transactionHash]
+                });
+            }
+        }
+    });
+
+    return suspectedWashTrades;
+}
 
 // Main function
 async function main() {
