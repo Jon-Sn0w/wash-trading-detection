@@ -36,3 +36,6 @@ generally occur between a limited set of user addresses.
 **If the output contains a large number of transactions the terminal may appear to hang for several minutes while the transactions are being processed.
 
 run walletScan.js to analyze wallets suspected of wash trading after preliminary scan of nft contract token transfer
+
+node washTradingAnalysis.js <wallet_address> <start_block> <end_block>
+
