@@ -3,21 +3,21 @@ const fs = require('fs');
 
 // Connect to the blockchain network
 const web3 = new Web3('https://songbird-api.flare.network/ext/C/rpc');
-const ERC721_TRANSFER_EVENT_SIGNATURE = web3.utils.sha3('Transfer(address,address,uint256)');
+const ERC721_TRANSFER_EVENT = web3.utils.sha3('Transfer(address,address,uint256)');
 
 async function fetchTransactions(walletAddress, fromBlock, toBlock) {
 	try {
 		const events = await web3.eth.getPastLogs({
 			fromBlock: fromBlock,
 			toBlock: toBlock,
-			topics: [ERC721_TRANSFER_EVENT_SIGNATURE, null, web3.utils.padLeft(walletAddress, 64)],
+			topics: [ERC721_TRANSFER_EVENT, null, web3.utils.padLeft(walletAddress, 64)],
+												  // Optional: specify contract addresses if filtering for specific ERC-721 tokens
 		});
 		
 		return events.map(event => {
-			// Ensure the topics are correctly formatted
 			const from = event.topics[1] ? '0x' + event.topics[1].slice(26) : null;
 			const to = event.topics[2] ? '0x' + event.topics[2].slice(26) : null;
-			const tokenId = event.topics[3] ? web3.utils.toBN(event.topics[3]).toString() : null;
+			const tokenId = event.data ? web3.utils.hexToNumberString(event.data) : null;
 			
 			return { from, to, tokenId, transactionHash: event.transactionHash };
 		});
@@ -26,7 +26,6 @@ async function fetchTransactions(walletAddress, fromBlock, toBlock) {
 		return [];
 	}
 }
-
 
 // Function to fetch transactions of a wallet address
 function analyzeForWashTrading(transactions) {
